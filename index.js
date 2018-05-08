@@ -2,6 +2,9 @@ class EventEmitter {
   constructor() {
     this.events = {};
   }
+  addListener(event, func) {
+    return this.on(event, func);
+  }
   on(event, func) {
     if (typeof func !== "function") throw new Error("callback must be a function");
     this.emit("newListener", event, func);
@@ -36,6 +39,17 @@ class EventEmitter {
         this.emit("removeListener", event, obj.func);
       }
     }
+  }
+  removeListener(event, func) {
+    if (!this.events[event] || !this.events[event].length) return;
+    const filter = obj => obj.func === func;
+    if (this.events[event].findIndex(filter) < 0) return;
+    this.events[event].splice(this.events[event].findIndex(filter), 1);
+  }
+  removeAllListeners(event) {
+    if (!event) {
+      this.events = {};
+    } else this.events[event] = [];
   }
 }
 
