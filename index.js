@@ -9,30 +9,60 @@ class EventEmitter {
     return this.on(event, func);
   }
   on(event, func) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (typeof func !== "function") throw new Error("callback must be a function");
     this.emit("newListener", event, func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: false, func: func});
   }
   once(event, func) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (typeof func !== "function") throw new Error("callback must be a function");
     this.emit("newListener", event, func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: true, func: func});
   }
   prependListener(event, func) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (typeof func !== "function") throw new Error("callback must be a function");
     this.emit("newListener", event, func):
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: false, func: func});
   }
   prependOnceListener(event, func) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (typeof func !== "function") throw new Error("callback must be a function");
     this.emit("newListener", event, func):
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: true, func: func});
   }
   emit(event, ...args) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (!event.includes) event = this.util.resolveSymbol(event);
     if (!this.events[event] || !this.events[event].length) return;
     const ev = this.events[event];
@@ -45,6 +75,12 @@ class EventEmitter {
     }
   }
   removeListener(event, func) {
+    if (!this.util.isString(event)) {
+      const temp = event;
+      event = this.util.resolveSymbol(event);
+      if (temp === event) throw new Error("event must be a string or symbol");
+    }
+    event = event.valueOf();
     if (!this.events[event] || !this.events[event].length) return;
     const filter = obj => obj.func === func;
     if (this.events[event].findIndex(filter) < 0) return;
@@ -53,7 +89,15 @@ class EventEmitter {
   removeAllListeners(event) {
     if (!event) {
       this.events = {};
-    } else this.events[event] = [];
+    } else {
+      if (!this.util.isString(event)) {
+        const temp = event;
+        event = this.util.resolveSymbol(event);
+        if (temp === event) throw new Error("event must be a string or symbol");
+      }
+      event = event.valueOf();
+      this.events[event] = [];
+    }
   }
 }
 
