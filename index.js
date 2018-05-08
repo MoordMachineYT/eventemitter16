@@ -12,6 +12,15 @@ class EventEmitter {
     if (!this.util.isValid(event)) throw new Error("event must be a string or symbol");
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     if (typeof func !== "function") throw new Error("callback must be a function");
+    if (this.listenerCount(event) + 1 > (this.getMaxListeners() || this.constructor.defaultMaxListeners)) {
+      const ev = this.util.symbolify(event);
+      const warn = {
+        name: "MaxListenersExceededWarning",
+        value: `Possible EventEmitter memory leak detected. ${this.listenerCount(event)} ${ev} listeners added. Use emitter.setMaxListeners() to increase limit`
+      };
+      Error.captureStackTrace(warn);
+      process.emit("warn", warn);
+    }
     this.emit("newListener", event, func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: false, func: func});
@@ -89,6 +98,10 @@ class EventEmitter {
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     if (!this.events[event]) return [];
     return this.events[event].map(obj => obj.func);
+  }
+  
+  static get defaultMaxListeners() {
+    return Util.defaultMaxListeners;
   }
 }
 
