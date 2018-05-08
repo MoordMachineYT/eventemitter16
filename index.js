@@ -1,6 +1,9 @@
+const Util = require("./util.js");
+
 class EventEmitter {
   constructor() {
     this.events = {};
+    this.util = new Util(this);
   }
   addListener(event, func) {
     return this.on(event, func);
@@ -30,6 +33,7 @@ class EventEmitter {
     this.events[event].unshift({once: true, func: func});
   }
   emit(event, ...args) {
+    if (!event.includes) event = this.util.resolveSymbol(event);
     if (!this.events[event] || !this.events[event].length) return;
     const ev = this.events[event];
     for (var obj of ev) {
