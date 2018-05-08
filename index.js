@@ -103,6 +103,8 @@ class EventEmitter {
   static get defaultMaxListeners() {
     return Util.defaultMaxListeners;
   }
+  static set defaultMaxListeners(num) {
+    if (typeof num !== "number" && !(num instanceof Number)) throw new TypeError("
 }
 
 module.exports = EventEmitter;
