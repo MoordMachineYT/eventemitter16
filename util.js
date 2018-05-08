@@ -13,4 +13,6 @@ class Util {
   }
 }
 
+Util.defaultMaxListeners = 10;
+
 module.exports = Util;
