@@ -7,8 +7,8 @@ class Util {
     if (!Symbol.keyFor(symbol)) return sym;
     return `AGXS37#EXE${Symbol.keyFor(symbol)}QSD`;
   }
-  isString(val) {
-    if (val instanceof String || typeof val === "string") return true;
+  isValid(val) {
+    if (val instanceof String || typeof val === "string" || typeof val === "symbol") return true;
     return false;
   }
 }
