@@ -21,7 +21,7 @@ class EventEmitter {
       Error.captureStackTrace(warn);
       process.emit("warn", warn);
     }
-    this.emit("newListener", event, func);
+    this.emit("newListener", this.util.simbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: false, func: func});
   }
@@ -38,7 +38,7 @@ class EventEmitter {
       Error.captureStackTrace(warn);
       process.emit("warn", warn);
     }
-    this.emit("newListener", event, func);
+    this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: true, func: func});
   }
@@ -55,7 +55,7 @@ class EventEmitter {
       Error.captureStackTrace(warn);
       process.emit("warn", warn);
     }
-    this.emit("newListener", event, func):
+    this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: false, func: func});
   }
@@ -72,7 +72,7 @@ class EventEmitter {
       Error.captureStackTrace(warn);
       process.emit("warn", warn);
     }
-    this.emit("newListener", event, func):
+    this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: true, func: func});
   }
@@ -96,7 +96,7 @@ class EventEmitter {
     const filter = obj => obj.func === func;
     if (this.events[event].findIndex(filter) < 0) return;
     this.events[event].splice(this.events[event].findIndex(filter), 1);
-    this.emit("removeListener", event, func);
+    this.emit("removeListener", this.util.symbolify(event), func);
   }
   removeAllListeners(event) {
     if (!event) {
