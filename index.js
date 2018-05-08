@@ -83,6 +83,13 @@ class EventEmitter {
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     if (!this.events[event]) return 0;
     return this.events[event].length;
+  }
+  listeners(event) {
+    if (!this.util.isValid(event)) throw new Error("event must be a string or symbol");
+    event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
+    if (!this.events[event]) return [];
+    return this.events[event].map(obj => obj.func);
+  }
 }
 
 module.exports = EventEmitter;
