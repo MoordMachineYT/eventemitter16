@@ -24,6 +24,7 @@ class EventEmitter {
     this.emit("newListener", this.util.simbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: false, func: func});
+    return this;
   }
   once(event, func) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
@@ -41,6 +42,7 @@ class EventEmitter {
     this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: true, func: func});
+    return this;
   }
   prependListener(event, func) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
@@ -58,6 +60,7 @@ class EventEmitter {
     this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: false, func: func});
+    return this;
   }
   prependOnceListener(event, func) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
@@ -75,6 +78,7 @@ class EventEmitter {
     this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].unshift({once: true, func: func});
+    return this;
   }
   emit(event, ...args) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
@@ -97,6 +101,7 @@ class EventEmitter {
     if (this.events[event].findIndex(filter) < 0) return;
     this.events[event].splice(this.events[event].findIndex(filter), 1);
     this.emit("removeListener", this.util.symbolify(event), func);
+    return this;
   }
   removeAllListeners(event) {
     if (!event) {
@@ -106,6 +111,7 @@ class EventEmitter {
       event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
       this.events[event] = [];
     }
+    return this;
   }
   listenerCount(event) {
     if (!event) {
@@ -138,6 +144,7 @@ class EventEmitter {
       throw e; // Not a number or too small
     }
     Util.defaultMaxListeners = num;
+  }
 }
 
 module.exports = EventEmitter;
