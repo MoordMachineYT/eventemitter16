@@ -133,7 +133,7 @@ class EventEmitter {
   }
   static set defaultMaxListeners(num) {
     if ((typeof num !== "number" && !(num instanceof Number)) || num < 0 || num > 2**53) {
-      const e = new TypeError("The \"defaultMaxListeners\" argument is out of range");
+      const e = new RangeError("The \"defaultMaxListeners\" argument is out of range");
       e.name = "TypeError [ERR_OUT_OF_RANGE]";
       throw e; // Not a number or too small
     }
