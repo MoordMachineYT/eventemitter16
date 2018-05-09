@@ -19,6 +19,9 @@ class Util {
     if (!this.symbols[sym]) return sym;
     return this.symbols[sym];
   }
+  enhanceStackTrace(err, own) { // Heavily inspired by node itself
+    
+  }
 }
 
 Util.defaultMaxListeners = 10;
