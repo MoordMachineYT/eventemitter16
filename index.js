@@ -4,6 +4,7 @@ class EventEmitter {
   constructor() {
     this.events = {};
     this.util = new Util(this);
+    return this;
   }
   addListener(event, func) {
     return this.on(event, func);
@@ -85,13 +86,17 @@ class EventEmitter {
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     if (!this.events[event] || !this.events[event].length) return;
     const ev = this.events[event];
+    if (!ev.length) return false;
     for (var obj of ev) {
       if (obj.once) {
         this.events[event].splice(ev.indexOf(obj), 1);
+        obj.func(...args);
         this.emit("removeListener", this.util.symbolify(event), obj.func);
+        continue;
       }
       obj.func(...args);
     }
+    return true;
   }
   removeListener(event, func) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
@@ -133,17 +138,33 @@ class EventEmitter {
     if (!this.events[event]) return [];
     return this.events[event].map(obj => obj.func);
   }
-  
+  setMaxListeners(num) {
+    if (isNaN(num)) {
+      const e = new TypeError("The num argument must be a number");
+      e.name = "TypeError [ERR_INVALID_ARG_TYPE]";
+      throw e; // Not a number
+    }
+    num = parseInt(num);
+    if (num < 0 || num > 2**53) {
+      const e = new RangError("The num argument is out of range");
+      throw e; // Too big or negative number
+    }
+    this.maxlisteners = num;
+    return this;
+  }
+  getMaxListeners() {
+    return this.maxlisteners || this.constructor.defaultMaxListeners;
+  }
   static get defaultMaxListeners() {
     return Util.defaultMaxListeners;
   }
   static set defaultMaxListeners(num) {
-    if ((typeof num !== "number" && !(num instanceof Number)) || num < 0 || num > 2**53) {
+    if (isNaN(num)) || num < 0 || num > 2**53) {
       const e = new RangeError("The \"defaultMaxListeners\" argument is out of range");
       e.name = "TypeError [ERR_OUT_OF_RANGE]";
       throw e; // Not a number or too small
     }
-    Util.defaultMaxListeners = num;
+    Util.defaultMaxListeners = parseInt(num);
   }
 }
 
