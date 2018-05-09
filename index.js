@@ -22,7 +22,7 @@ class EventEmitter {
       Error.captureStackTrace(warn);
       process.emit("warn", warn);
     }
-    this.emit("newListener", this.util.simbolify(event), func);
+    this.emit("newListener", this.util.symbolify(event), func);
     if (!this.events[event]) this.events[event] = [];
     this.events[event].push({once: false, func: func});
     return this;
