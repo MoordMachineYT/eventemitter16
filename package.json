@@ -1,6 +1,6 @@
 {
   "name": "eventemitter16",
-  "version": "0.1",
+  "version": "0.1.0",
   "description": "A custom event emitter to replace Node's built in one",
   "main": "index.js",
   "scripts": {
