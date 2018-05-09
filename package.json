@@ -1,3 +1,25 @@
 {
-
+  "name": "eventemitter16",
+  "version": "0.1",
+  "description": "A custom event emitter to replace Node's built in one",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "MoordMachineYT#1910",
+  "license": "MIT",
+  "keywords": [
+    "eventemitter16",
+    "eventemitter",
+    "node",
+    "nodejs"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MoordMachineYT/eventemitter16.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MoordMachineYT/eventemitter16/issues"
+  },
+  "homepage": "https://github.com/MoordMachineYT/eventemitter16#readme"
 }
