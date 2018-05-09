@@ -87,20 +87,26 @@ class EventEmitter {
     if (!this.events[event] || !this.events[event].length) return;
     let doError = event === "error";
     const ev = this.events[event];
-    if (!ev || !ev.length) {
+    if ((!ev || !ev.length) && doError) {
       let err;
       if (args[0]) err = args[0];
       if (err instanceof Error) {
-        const { kExpandStackSymbol } = require("internal/util");
-        const capture = {};
-        Error.captureStackTrace(capture, this.emit);
-        Object.defineProperty(err, kExpandStackSymbol, {
-          value: this.util.enhanceStackTrace.bind(null, err, capture),
-          configurable: true
-        });
+        try{
+          const { kExpandStackSymbol } = require("internal/util");
+          const capture = {};
+          Error.captureStackTrace(capture, this.emit);
+          Object.defineProperty(err, kExpandStackSymbol, {
+            value: this.util.enhanceStackTrace.bind(null, err, capture),
+            configurable: true
+          });
+        }catch(e) {}
+        throw err; // Unhandled 'error' event
       }
+      const error = new Error(err || "Unhandled 'error' event");
+      error.context = err;
+      throw error; // Unhandled 'error' event
     }
-    if (!ev.length) return false;
+    if (!ev || !ev.length) return false;
     for (var obj of ev) {
       if (obj.once) {
         this.events[event].splice(ev.indexOf(obj), 1);
