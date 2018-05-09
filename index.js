@@ -155,6 +155,9 @@ class EventEmitter {
   getMaxListeners() {
     return this.maxlisteners || this.constructor.defaultMaxListeners;
   }
+  eventNames() {
+    return Object.keys(this.events).map(d=>this.util.symbolify(d));
+  }
   static get defaultMaxListeners() {
     return Util.defaultMaxListeners;
   }
