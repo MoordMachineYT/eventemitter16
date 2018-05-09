@@ -204,7 +204,7 @@ class EventEmitter {
     return Util.defaultMaxListeners;
   }
   static set defaultMaxListeners(num) {
-    if (isNaN(num)) || num < 0 || num > 2**53) {
+    if (isNaN(num) || num < 0 || num > 2**53) {
       const e = new RangeError("The \"defaultMaxListeners\" argument is out of range");
       e.name = "TypeError [ERR_OUT_OF_RANGE]";
       throw e; // Not a number or too small
