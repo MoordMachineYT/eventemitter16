@@ -178,6 +178,28 @@ class EventEmitter {
   eventNames() {
     return Object.keys(this.events).map(d=>this.util.symbolify(d));
   }
+  rawListeners(event) {
+    if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
+    event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
+    if (!this.events[event] || !this.events[event].length) return [];
+    const ev = this.events[event].map(obj => {
+      function listener(...args) {
+        if (obj.once) {
+          this.events[event].splice(this.events[event].indexOf(obj), 1);
+          obj.func(...args);
+          this.emit("removeListener", event, obj.func);
+          return;
+        }
+        obj.func(...args);
+      }
+      listener.event = this.util.symbolify(event);
+      listener.listener = (...args) => {
+        obj.func(...args);
+      };
+      return listener;
+    });
+    return ev;
+  }
   static get defaultMaxListeners() {
     return Util.defaultMaxListeners;
   }
