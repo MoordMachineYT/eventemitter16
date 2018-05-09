@@ -85,7 +85,21 @@ class EventEmitter {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     if (!this.events[event] || !this.events[event].length) return;
+    let doError = event === "error";
     const ev = this.events[event];
+    if (!ev || !ev.length) {
+      let err;
+      if (args[0]) err = args[0];
+      if (err instanceof Error) {
+        const { kExpandStackSymbol } = require("internal/util");
+        const capture = {};
+        Error.captureStackTrace(capture, this.emit);
+        Object.defineProperty(err, kExpandStackSymbol, {
+          value: this.util.enhanceStackTrace.bind(null, err, capture),
+          configurable: true
+        });
+      }
+    }
     if (!ev.length) return false;
     for (var obj of ev) {
       if (obj.once) {
