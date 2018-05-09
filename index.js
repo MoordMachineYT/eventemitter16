@@ -84,10 +84,8 @@ class EventEmitter {
   emit(event, ...args) {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
-    if (!this.events[event] || !this.events[event].length) return;
-    let doError = event === "error";
-    const ev = this.events[event];
-    if ((!ev || !ev.length) && doError) {
+    let doError = (event === "error");
+    if (!this.listenerCount(this.symbolify(event) && doError) {
       let err;
       if (args[0]) err = args[0];
       if (err instanceof Error) {
@@ -106,6 +104,7 @@ class EventEmitter {
       error.context = err;
       throw error; // Unhandled 'error' event
     }
+    const ev = this.events[event];
     if (!ev || !ev.length) return false;
     for (var obj of ev) {
       if (obj.once) {
