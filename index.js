@@ -85,7 +85,7 @@ class EventEmitter {
     if (!this.util.isValid(event)) throw new TypeError("event must be a string or symbol");
     event = typeof event === "symbol" ? this.util.resolveSymbol(event) : event;
     let doError = (event === "error");
-    if (!this.listenerCount(this.symbolify(event) && doError) {
+    if (!this.listenerCount(this.symbolify(event)) && doError) {
       let err;
       if (args[0]) err = args[0];
       if (err instanceof Error) {
