@@ -18,7 +18,7 @@ A custom event emitter to replace Node’s built in eventemitter
 const EventEmitter = require('eventemitter16'); // Import the module
 const emitter = new EventEmitter; // Create an instance of it
 
-emitter.on('hello', () => { // Listen to the event
+emitter.on('hello', function hello() { // Listen to the event
   console.log("Hello world!");
 });
 
@@ -30,12 +30,12 @@ emitter.emit('hello'); // Invokes all listeners for 'hello'
 const EventEmitter = require('eventemitter16'); // Import the module
 const emitter = new EventEmitter; // Create an instance of it
 
-emitter.on('exec', (hello, world) => { // Listen to the event
+emitter.on('exec', function exec(hello, world) { // Listen to the event
   console.log(hello + ' ' + world);
   emitter.emit('qwerty', hello, world); // Invokes all listeners for 'qwerty'
 });
 
-emitter.on('qwerty', (...args) => { // Listen to the event
+emitter.on('qwerty', function qwerty(...args) { // Listen to the event
   console.log(args.join(' ');
 });
 
@@ -72,4 +72,41 @@ emitter.on('message', msg => { // Listen to the event
 
 emitter.emit('message', 'drooM'); // Invokes all listeners for 'message'
 emitter.emit('message', 'Hello world!'); // Won't invoke the second listener since it got removed
+```
+
+- **Simple emitter listening to 'newListener'** *Fired when a new listener is added*
+```js
+const EventEmitter = require('eventemitter16'); // Import the module
+const emitter = new EventEmitter; // Create an instance of it
+
+emitter.on('newListener', function newListener(event, listener) { // This will emit itself
+  console.log(`[${event}] Amount of parameters: ${listener.length}`);
+});
+
+emitter.on('qwerty', function qwerty(alphabet) { // Emits 'newListener'
+  console.log(alphabet);
+});
+```
+Doing this, however, has 1 flaw. It will emit itself. But thankfully, there is an easy workaround for this. Add this to the first line of the callback function: 
+```js
+if (event === 'newListener') return;
+```
+
+- **Simple emitter removing listeners**
+```js
+const EventEmitter = require('eventemitter16'); // Import the module
+const emitter = new EventEmitter; // Create an instance of it
+
+var count = 0;
+
+function listener() { // So you don't have to copy paste
+  console.log('Hello world!');
+  if (++count === 5) emitter.removeListener('listener', listener); // Easy and lightweight
+}
+
+emitter.on('listener', listener); // Easy and lightweight
+
+while (emitter.listenerCount('listener')) { // While there are listeners for 'listener'
+  emitter.emit('listener');
+} // Doing like this prevents memory leaks
 ```
