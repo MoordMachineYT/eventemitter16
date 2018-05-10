@@ -195,6 +195,7 @@ class EventEmitter {
       listener.listener = (...args) => {
         obj.func(...args);
       };
+      listener = listener.bind(this);
       return listener;
     });
     return ev;
