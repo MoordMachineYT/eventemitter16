@@ -1,6 +1,10 @@
 # eventemitter16
 A custom event emitter to replace Node’s built in eventemitter
 
+| Discord | Github | NPM |
+| :---: | :---: | :---: |
+| [https://discord.gg/MUtUCNu](https://discord.gg/MUtUCNu) | []() | Not uploaded yet |
+
 ---
 <h1>Why eventemitter16?</h1>
 
